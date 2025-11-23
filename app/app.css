@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* 🧱 Arka Planlar (Backgrounds) */
+  --color-main: #0d1117; /* ink-black (Ana Arka Plan, En Koyu) */
+  --color-surface: #161b22; /* ink-black-2 (Kartlar, Paneller) */
+
+  /* ✍️ Metinler (Texts) */
+  --color-base: #f0f6fc; /* alice-blue (Birincil Metin) */
+  --color-subtle: #8b949e; /* cool-steel (İkincil Metin/Açıklamalar) */
+
+  /* 🔵 Ana Marka Rengi (Main Brand Color) */
+  --color-primary: #1a5eaa; /* baltic-blue (Linkler, Birincil CTA) */
+
+  /* 🟢 Vurgu Rengi (Accent Color) */
+  --color-accent: #4daf50; /* medium-jungle (Öne Çıkan Özellikler, Başarı) */
+
+  /* ✨ Yardımcı Renkler (Utility/Status Colors) */
+  --color-gold: #ffb800; /* amber-flame (Puanlama, Dikkat) */
+  --color-danger: #da3633; /* scarlet-rush (Hata, Uyarı) */
+}
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--color-main);
+}
