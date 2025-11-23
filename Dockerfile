@@ -1,3 +1,5 @@
+# Dockerfile (seyirlik-fe deposu)
+
 # Aşama 1: Build Aşaması (Üretim sürümünü oluştur)
 FROM node:20-alpine AS builder
 
@@ -6,14 +8,15 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Vite ile üretimi derle
-RUN npm run build
+# Bu adımın çıktısı /app/build/client klasörüne gidiyorsa
+RUN npm run build 
 
 # Aşama 2: Serving Aşaması (Hafif bir web sunucusu kullan)
 FROM nginx:stable-alpine
 
-# Build aşamasından statik dosyaları kopyala
-COPY --from=builder /app/dist /usr/share/nginx/html
+# HATA DÜZELTİLDİ: Build aşamasından dosyaları doğru yoldan kopyala
+COPY --from=builder /app/build/client /usr/share/nginx/html 
+# ^^^^^^^^^^^^^^^^^ Bu kısmı /app/dist yerine /app/build/client yaptık.
 
 # Nginx'i 80 portunda çalıştır
 EXPOSE 80
