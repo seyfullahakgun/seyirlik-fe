@@ -1,0 +1,60 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - preprod
+      - feature/**
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      # ... (Docker Login adımları aynı) ...
+      
+      # 2. Ortam ve TAG Değişkenlerini Ayarlama
+      - name: Set Environment Variables
+        id: set_vars
+        run: |
+          TAG=$(echo ${{ github.sha }} | cut -c1-8)
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            TARGET_DOMAIN="seyirlik.net"
+            DOCKER_TAG="prod-$TAG"
+          else
+            TARGET_DOMAIN="test.seyirlik.net"
+            DOCKER_TAG="preprod-$TAG"
+          fi
+          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+          
+      # 3. Frontend İmajını Oluşturma ve İtme (Push)
+      - name: Build and Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Repo'nun kökü
+          file: ./Dockerfile
+          push: true
+          # İmaj etiketi: KullanıcıAdı/seyirlik-fe:tag_adı
+          tags: ${{ secrets.DOCKER_USERNAME }}/seyirlik-fe:${{ env.DOCKER_TAG }}
+
+      # 4. Hetzner'a Dağıtım (Deploy)
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.SSH_USERNAME }}/seyirlik_infra
+            
+            export TAG=${{ env.DOCKER_TAG }}
+
+            echo "CI/CD: Frontend imajı çekiliyor ve servis güncelleniyor..."
+            
+            # sadece frontend servisini güncelliyoruz
+            sudo docker-compose pull frontend 
+            sudo docker-compose up -d --no-deps frontend
+            
+            echo "Dağıtım başarılı: ${{ env.TARGET_DOMAIN }}"
