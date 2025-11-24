@@ -18,19 +18,22 @@ export default function Index() {
         />
       </div>
       
-      <h1 className="mb-4 text-4xl font-bold text-[var(--color-base)] md:text-6xl">
+      <h1 className="mb-4 text-4xl font-bold text-base md:text-6xl">
         Yakında Sizlerle
       </h1>
       
-      <p className="max-w-md text-lg text-[var(--color-subtle)] md:text-xl">
+      <p className="max-w-md text-lg text-subtle md:text-xl">
         Film ve dizi dünyasını keşfetmeye hazır olun. 
-        <span className="block mt-2 text-[var(--color-primary)]">Çok yakında buradayız.</span>
+        <span className="block mt-2 text-primary">Çok yakında buradayız.</span>
       </p>
-      
+
+      {/* İsmim yazacak */}
+      <p className="mt-4 text-xs text-subtle md:text-xl">Seyfullah Akgün</p>
+
       <div className="mt-12 flex gap-4">
-        <div className="h-1 w-16 rounded-full bg-[var(--color-accent)] opacity-50"></div>
-        <div className="h-1 w-16 rounded-full bg-[var(--color-primary)] opacity-50"></div>
-        <div className="h-1 w-16 rounded-full bg-[var(--color-gold)] opacity-50"></div>
+        <div className="h-1 w-16 rounded-full bg-accent opacity-50"></div>
+        <div className="h-1 w-16 rounded-full bg-primary opacity-50"></div>
+        <div className="h-1 w-16 rounded-full bg-gold opacity-50"></div>
       </div>
     </div>
   );
