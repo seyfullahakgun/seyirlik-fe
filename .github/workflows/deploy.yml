@@ -13,17 +13,15 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      # ... (Docker Login adımları aynı) ...
-
-      # 🚨 DÜZELTME BAŞLANGICI
+      
+      # 1. Docker Hub'a Giriş
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          registry: docker.io # 👈 Bu satır, Docker Hub'ın adresini açıkça belirtir.
-      # 🚨 DÜZELTME BİTİŞİ
-      
+          registry: docker.io # Docker Hub adresini açıkça belirtir
+          
       # 2. Ortam ve TAG Değişkenlerini Ayarlama
       - name: Set Environment Variables
         id: set_vars
@@ -42,10 +40,9 @@ jobs:
       - name: Build and Push Frontend Image
         uses: docker/build-push-action@v5
         with:
-          context: . # Repo'nun kökü
+          context: .
           file: ./Dockerfile
           push: true
-          # İmaj etiketi: KullanıcıAdı/seyirlik-fe:tag_adı
           tags: ${{ secrets.DOCKER_USERNAME }}/seyirlik-fe:${{ env.DOCKER_TAG }}
 
       # 4. Hetzner'a Dağıtım (Deploy)
@@ -58,12 +55,17 @@ jobs:
           script: |
             cd /home/${{ secrets.SSH_USERNAME }}/seyirlik_infra
             
-            export TAG=${{ env.DOCKER_TAG }}
-
+            # 🚨 DÜZELTME BAŞLANGICI
+            
+            # TAG değişkenini sudo'ya geçirerek pull komutunu çalıştır
             echo "CI/CD: Frontend imajı çekiliyor ve servis güncelleniyor..."
             
-            # sadece frontend servisini güncelliyoruz
-            sudo docker-compose pull frontend 
-            sudo docker-compose up -d --no-deps frontend
+            # 1. Pull işlemi için TAG değişkenini sudo'ya geçir
+            sudo TAG=${{ env.DOCKER_TAG }} docker-compose pull frontend
+            
+            # 2. Up işlemi için TAG değişkenini sudo'ya geçir
+            sudo TAG=${{ env.DOCKER_TAG }} docker-compose up -d --no-deps frontend
+            
+            # 🚨 DÜZELTME BİTİŞİ
             
             echo "Dağıtım başarılı: ${{ env.TARGET_DOMAIN }}"
