@@ -27,9 +27,6 @@ export default function Index() {
         <span className="block mt-2 text-primary">Çok yakında buradayız.</span>
       </p>
 
-      {/* İsmim yazacak */}
-      <p className="mt-4 text-xs text-subtle md:text-xl">Seyfullah Akgün</p>
-
       <div className="mt-12 flex gap-4">
         <div className="h-1 w-16 rounded-full bg-accent opacity-50"></div>
         <div className="h-1 w-16 rounded-full bg-primary opacity-50"></div>
